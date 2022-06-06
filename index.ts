@@ -62,7 +62,9 @@ bot.once("spawn", () => {
   console.log("Bot spawned!");
   mineflayerViewer.mineflayer(bot, { port: 3007, firstPerson: false });
 });
-app.get("/", (req, res) => {});
+app.get("/", (req, res) => {
+  res.send("Server Running");
+});
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
