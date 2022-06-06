@@ -1,8 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import mineflayer from "mineflayer";
-//@ts-ignore
-import mineflayerViewer from "prismarine-viewer";
 
 // EXPRESS
 const app = express();
@@ -60,7 +58,6 @@ bot.on("error", () => {
 
 bot.once("spawn", () => {
   console.log("Bot spawned!");
-  mineflayerViewer.mineflayer(bot, { port: 3007, firstPerson: false });
 });
 app.get("/", (req, res) => {
   res.send("Server Running");
