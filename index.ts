@@ -1,18 +1,16 @@
 import "dotenv/config";
 import express from "express";
 import mineflayer from "mineflayer";
+import { v4 as uuidv4 } from "uuid";
 
 // EXPRESS
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // BOT
 
-let botNum = 1;
-
 const host = process.env.MINECRAFT_HOST || "";
-const username = process.env.MINECRAFT_USERNAME || "";
 const port = process.env.MINECRAFT_PORT;
 
 // VARS
@@ -33,7 +31,7 @@ const maxRandom = 5;
 
 const botConfig = {
   host,
-  username: username + botNum,
+  username: "vegeta" + uuidv4().substring(0, 8),
   port: port ? parseInt(port) : 25565,
 };
 
@@ -66,6 +64,8 @@ const handleMovement = (bot: mineflayer.Bot) => {
 
 function bindEvents(bot: mineflayer.Bot) {
   bot.once("spawn", () => {
+    console.log(`Connected with: ${bot.username}`);
+    console.log("BOT SPAWNED");
     isConnected = true;
     lastTime = bot.time.age;
   });
@@ -77,21 +77,23 @@ function bindEvents(bot: mineflayer.Bot) {
   bot.on("error", (err) => {
     console.log("Error: " + err.message);
     isConnected = false;
-    botNum += 1;
     setTimeout(relog, 5000);
   });
 
   bot.on("end", (a) => {
     isConnected = false;
     console.log("Bot has ended: " + a);
-    botNum += 1;
     setTimeout(relog, 5000);
   });
 }
 
 function relog() {
-  console.log("Attempting to reconnect...");
-  bot = mineflayer.createBot(botConfig);
+  const newUsername = "vegeta" + uuidv4().substring(0, 8);
+  console.log(`Attempting to reconnect with: ${newUsername}...`);
+  bot = mineflayer.createBot({
+    ...botConfig,
+    username: newUsername,
+  });
   bindEvents(bot);
 }
 
