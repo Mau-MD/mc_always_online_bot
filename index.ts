@@ -89,6 +89,7 @@ function bindEvents(bot: mineflayer.Bot) {
   bot.on("end", (a) => {
     isConnected = false;
     console.log("Bot has ended: " + a);
+    isRetrying = true;
     setTimeout(() => {
       if (!isRetrying || isConnected) return;
       isRetrying = false;
