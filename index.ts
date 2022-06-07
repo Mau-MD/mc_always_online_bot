@@ -25,6 +25,7 @@ let lastTime = -1;
 let isMoving = false;
 let isConnected = false;
 let lastAction: typeof actions[number];
+let isRetrying = false;
 
 const moveInterval = 2;
 const maxRandom = 5;
@@ -77,13 +78,22 @@ function bindEvents(bot: mineflayer.Bot) {
   bot.on("error", (err) => {
     console.log("Error: " + err.message);
     isConnected = false;
-    setTimeout(relog, 5000);
+    isRetrying = true;
+    setTimeout(() => {
+      if (!isRetrying || isConnected) return;
+      isRetrying = false;
+      relog();
+    }, 5000);
   });
 
   bot.on("end", (a) => {
     isConnected = false;
     console.log("Bot has ended: " + a);
-    setTimeout(relog, 5000);
+    setTimeout(() => {
+      if (!isRetrying || isConnected) return;
+      isRetrying = false;
+      relog();
+    }, 5000);
   });
 }
 
